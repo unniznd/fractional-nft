@@ -4,9 +4,8 @@ pragma solidity ^0.8.22;
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 
 contract LandRegistration is ERC721Enumerable {
-    ERC20 public fractionalToken;
     address public owner;
-    uint256 private _tokenIdCounter = 0;
+    uint256 public _tokenIdCounter = 0;
 
     struct LandToken{
         string name;
@@ -19,12 +18,11 @@ contract LandRegistration is ERC721Enumerable {
         uint256 amount;
     }
 
-    mapping(uint256 => LandToken) private _landTokens;
-    mapping(address => FractionalOwnership[]) private _fractionalOwnerships;
+    mapping(uint256 => LandToken) public _landTokens;
+    mapping(address => FractionalOwnership[]) public _fractionalOwnerships;
 
-    constructor(address _fractionalToken) ERC721("FractionalLandRegistration", "FLR") {
+    constructor() ERC721("FractionalLandRegistration", "FLR") {
         owner = msg.sender;
-        fractionalToken = ERC20(_fractionalToken);
     }
 
     function mint(
@@ -43,7 +41,6 @@ contract LandRegistration is ERC721Enumerable {
         );
 
         for (uint256 i = 0; i < fractinalOwners.length; i++) {
-            fractionalToken.transfer(fractinalOwners[i], fractionalAmounts[i] * 10**18);
             _fractionalOwnerships[fractinalOwners[i]].push(
                 FractionalOwnership(_tokenIdCounter, fractionalAmounts[i])
             );
@@ -57,10 +54,19 @@ contract LandRegistration is ERC721Enumerable {
         uint256 amount
     ) public {
         require(
-            fractionalToken.balanceOf(from) >= amount,
-            "FractionalToken: Not enough balance"
+            _fractionalOwnerships[from].length > 0,
+            "LandRegistration: fractional ownership not found"
         );
-        fractionalToken.transferFrom(from, to, amount);
+        FractionalOwnership[] memory fractionalOwnerships = _fractionalOwnerships[from];
+        for (uint256 i = 0; i < fractionalOwnerships.length; i++) {
+            if (fractionalOwnerships[i].tokenId == tokenId) {
+                require(
+                    fractionalOwnerships[i].amount >= amount,
+                    "LandRegistration: fractional ownership amount exceeded"
+                );
+                break;
+            }
+        }
         _fractionalOwnerships[from].push(FractionalOwnership(tokenId, amount));
         for (uint256 i = 0; i < _fractionalOwnerships[from].length; i++) {
             if (_fractionalOwnerships[from][i].tokenId == tokenId ) {
