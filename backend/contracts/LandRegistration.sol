@@ -31,6 +31,11 @@ contract LandRegistration is ERC721Enumerable {
         string memory name,
         string memory description
     ) public {
+        require(owner == msg.sender, "LandRegistration: only owner can mint");
+        require(
+            fractinalOwners.length == fractionalAmounts.length,
+            "LandRegistration: fractional owners and fractional amounts length mismatch"
+        );
         _tokenIdCounter++;
         _mint(address(this), _tokenIdCounter);
         _landTokens[_tokenIdCounter] = LandToken(
@@ -94,9 +99,74 @@ contract LandRegistration is ERC721Enumerable {
         _fractionalOwnerships[to].push(FractionalOwnership(tokenId, amount));
     }
 
+    function burnFractionalOwnership(
+        address from,
+        uint256 tokenId,
+        uint256 amount
+    ) public {
+        require(owner == msg.sender, "LandRegistration: only owner can mint");
+        require(
+            _fractionalOwnerships[from].length > 0,
+            "LandRegistration: fractional ownership not found"
+        );
+        FractionalOwnership[] memory fractionalOwnerships = _fractionalOwnerships[from];
+        for (uint256 i = 0; i < fractionalOwnerships.length; i++) {
+            if (fractionalOwnerships[i].tokenId == tokenId) {
+                require(
+                    fractionalOwnerships[i].amount >= amount,
+                    "LandRegistration: fractional ownership amount exceeded"
+                );
+                break;
+            }
+        }
+        for (uint256 i = 0; i < _fractionalOwnerships[from].length; i++) {
+            if (_fractionalOwnerships[from][i].tokenId == tokenId ) {
+                _fractionalOwnerships[from][i].amount -= amount;
+                if(_fractionalOwnerships[from][i].amount == 0){
+                    delete _fractionalOwnerships[from][i];
+                    for(uint256 j = 0; j < _landTokens[tokenId].fractinalOwners.length; j++){
+                        if(_landTokens[tokenId].fractinalOwners[j] == from){
+                            delete _landTokens[tokenId].fractinalOwners[j];
+                            delete _landTokens[tokenId].fractionalAmounts[j];
+                        }
+                    }
+                }else{
+                    for(uint256 j = 0; j < _landTokens[tokenId].fractinalOwners.length; j++){
+                        if(_landTokens[tokenId].fractinalOwners[j] == from){
+                            _landTokens[tokenId].fractionalAmounts[j] = _fractionalOwnerships[from][i].amount;
+                        }
+                    }
+                }
+                break;
+            }
+        }
+       
+    }
 
     function getFractionalOwnerships(address _owner) public view returns(FractionalOwnership[] memory){
         return _fractionalOwnerships[_owner];
     }
+    
+
+    function getDetailedFractionOwnership() public view returns(LandToken[] memory){
+        FractionalOwnership[] memory fractionalOwnerships = _fractionalOwnerships[msg.sender];
+        if(fractionalOwnerships.length == 0){
+            return new LandToken[](0);
+        }
+        LandToken[] memory landTokens = new LandToken[](fractionalOwnerships.length);
+        for(uint256 i = 0; i < fractionalOwnerships.length; i++){
+            landTokens[i] = _landTokens[fractionalOwnerships[i].tokenId];
+        }
+
+        return landTokens;
+    }
+
+    function getLandTokenById(uint256 tokenId) public view returns(LandToken memory){
+        return _landTokens[tokenId];
+    }
+
+    function isOwner() public view returns (bool) {
+        return owner == msg.sender;
+    }  
 
 }

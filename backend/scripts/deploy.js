@@ -1,7 +1,7 @@
 const main = async () => {
 
   const contractNames = [
-       // TODO: Add contract names here
+       "LandRegistration",
   ];
 
   for(let i = 0; i<contractNames.length; i++){
