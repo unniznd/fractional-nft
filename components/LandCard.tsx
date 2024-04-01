@@ -86,17 +86,17 @@ const LandCard: React.FC<LandCardProps> = ({landId,  name, description, viewerAd
   
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-md w-full max-w-md mx-auto mb-8 overflow-hidden">
-      <h2 className="text-xl font-bold mb-2 overflow-hidden whitespace-nowrap overflow-ellipsis">
+    <div className="bg-black p-6 rounded-lg shadow-[0_0_8px_theme('colors.purple.400')] w-full max-w-md mx-auto mb-8 overflow-hidden">
+      <h2 className="text-xl text-white font-bold mb-2 overflow-hidden whitespace-nowrap overflow-ellipsis">
         {name}
       </h2>
-      <p className="text-gray-600 mb-4 overflow-hidden overflow-ellipsis">
+      <p className="text-gray-500 mb-4 overflow-hidden overflow-ellipsis">
         {description}
       </p>
-      <p className="text-sm text-gray-500 mb-4">Share Percentage: {calculateSharePercentage()}</p>
+      <p className="text-sm text-gray-400 mb-4">Share Percentage: {calculateSharePercentage()}</p>
       <div className="flex space-x-4">
         <button 
-          className="bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-700 focus:outline-none focus:shadow-outline-blue"
+          className="bg-purple-500 text-white px-4 py-2 rounded-full hover:bg-purple-700 focus:outline-none focus:shadow-outline-blue"
           onClick={handleTransferClick}
         >
           Transfer Land

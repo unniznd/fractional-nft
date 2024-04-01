@@ -17,9 +17,13 @@
 }
 
 body {
-  background-color: white;
+  background-color: rgb(31, 29, 29);
 }
 
+header{
+  width: 100%;
+}
+ 
 @layer utilities {
   .text-balance {
     text-wrap: balance;

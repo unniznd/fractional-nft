@@ -127,22 +127,45 @@ const Home: React.FC<{ address: string }> = ({ address }) => {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <div className="flex justify-between p-4">
-        <div>
-          <p className="text-lg">
-            Hello <span style={{ fontWeight: 'bold' }}>{address}</span>
-          </p>
-        </div>
-        {isOwner && (
-          <button
-            className="bg-green-500 text-white px-4 py-2 rounded-full flex items-center hover:bg-green-700 focus:outline-none focus:shadow-outline-green"
-            onClick={handleAddLand}
-          >
-            <FaPlus className="mr-2" />
-            Add Land
-          </button>
-        )}
-      </div>
+      <div className="flex justify-between p-4 w-full">
+      <header className="bg-black">
+  <nav className="flex justify-between items-center p-4">
+    <div>
+      <p className="text-xl text-white" style={{ fontWeight: 'bold' }}>
+        FractionaNFT
+      </p>
+    </div>
+    <div className="hidden md:block"> {/* Hide on small screens */}
+      <ul className="flex items-center gap-4">
+        <li className='text-white'> User <span style={{ fontWeight: 'bold' }}>{address}</span></li>
+      </ul>
+    </div>
+    <div className="md:hidden"> {/* Show on small screens */}
+      {isOwner && (
+        <button
+          className="bg-green-500 text-white px-4 py-2 rounded-full flex items-center hover:bg-green-700 focus:outline-none focus:shadow-outline-green"
+          onClick={handleAddLand}
+        >
+          <FaPlus className="mr-2" />
+          Add Land
+        </button>
+      )}
+    </div>
+  </nav>
+</header>
+
+  
+  {isOwner && (
+    <button
+      className="bg-green-500 text-white px-4 py-2 rounded-full flex items-center hover:bg-green-700 focus:outline-none focus:shadow-outline-green"
+      onClick={handleAddLand}
+    >
+      <FaPlus className="mr-2" />
+      Add Land
+    </button>
+  )}
+</div>
+
 
       {loading ? (
         <p className="text-center" style={{ fontWeight: 'bold' }}>
