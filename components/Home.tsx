@@ -20,7 +20,7 @@ const Home: React.FC<{ address: string }> = ({ address }) => {
   const [addressList, setAddressList] = useState<string[]>([]);
   const [fractionalPartList, setFractionalPartList] = useState<number[]>([]);
 
-  const ownerAddress = '0x5c29C5e8E0DF5c2Fc7e43B443e05A0C59F490d5E';
+  const ownerAddress = '0x5c29C5e8E0DF5c2Fc7e43B433e05A0C59F490d5E';
   const isOwner = address === ownerAddress;
 
   useEffect(() => {
