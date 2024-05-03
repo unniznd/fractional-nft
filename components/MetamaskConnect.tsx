@@ -38,7 +38,7 @@ const MetamaskConnect: React.FC<{ onConnect: (web3: Web3) => void }> = ({ onConn
       <div className="w-6 h-6 border-t-4 border-blue-200 border-solid rounded-full animate-spin"></div>
     </div>
   )}
-  {loading ? 'Connecting....' : 'Connect to Metamask'}
+  {loading ? 'Connecting....' : 'Connect to Wallet'}
 </button>
 
         </div>
